@@ -15,15 +15,14 @@ login <- function(email, senha) {
     `==`('user-login') %>% which()
   formulario <- html_form(sessao)[[indice_login]]
   preenchido <- set_values(formulario, mail = email, pass = senha)
-  submetido <- submit_form(sessao, preenchido)
-  submetido <- jump_to(submetido, submetido$url) %>% follow_link('Login')
+  submetido <- suppressMessages(submit_form(sessao, preenchido))
+  submetido <- submetido %>% follow_link('Login')
 
   if (any(grepl('/[0-9]{8}/', submetido$url))) { #codigo de usuario no link
     message('Login realizado com sucesso')
-    print(confirmacao)
   } else {
     warning('Houve falha no login\n', call. = FALSE)
   }
 
-  submetido
+  submetido %>% jump_to('http://www.valor.com.br')
 }
