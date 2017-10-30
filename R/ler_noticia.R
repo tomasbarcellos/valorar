@@ -25,7 +25,7 @@ ler_noticia <- function(sessao, url) {
     stringr::str_replace_all('\\n *', '')
   body <- noticia %>% html_nodes('.node-body')
 
-  if (html_children(body) == 0 ) {
+  if (length(html_children(body)) == 0 ) {
     texto <- body %>% html_text()
   } else {
     texto <- body %>% html_nodes('p') %>% html_text()

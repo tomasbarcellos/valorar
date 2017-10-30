@@ -1,3 +1,12 @@
+---
+title: "Introdução ao valor"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introducao ao valor}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
 # valor
 
 ## Instalar o pacote
@@ -9,21 +18,33 @@ devtools::install_github('tomasbarcellos/valor')
 
 ## Uso do pacote
 
-```{r}
+```{r, eval = FALSE}
 library(valor)
 email <- 'meu-email@provedor'
 senha <- 'minha_senha'
 sessao_logada <- login(email, senha)
-str(sessao_logada)
+# dar uma olhada do objeto da sessao
+sessao_logada
+```
+
+```{r, echo = FALSE}
+library(valor)
+config <- readLines('../.valor')
+email <- config[1]
+senha <- config[2]
+sessao_logada <- login(email, senha)
+# dar uma olhada do objeto da sessao
+sessao_logada
 ```
 
 ## Lendo noticias
 
 ```{r}
-links_noticias <- conectado %>% read_html() %>% html_nodes('.teaser-title a') %>% html_attr('href') %>% 
+links_noticias <- sessao_logada %>% read_html() %>% html_nodes('.teaser-title a') %>% html_attr('href') %>% 
+  `[`(. != '') %>% 
   ifelse(test = grepl(pattern = '\\bhttp', x = .), no = paste0('http://www.valor.com.br', .))
 
-noticias <- conectado %>% ler_noticia(links_noticias)
+noticias <- sessao_logada %>% ler_noticia(links_noticias)
 ```
 
 A resposta da função `ler_noticia` é um objeto de classe `noticia`.
@@ -33,6 +54,5 @@ noticias[[1]]
 ```
 
 ```{r}
-str(noticias[[1]])
 ```
 

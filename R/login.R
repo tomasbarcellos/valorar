@@ -16,7 +16,7 @@ login <- function(email, senha) {
   formulario <- html_form(sessao)[[indice_login]]
   preenchido <- set_values(formulario, mail = email, pass = senha)
   submetido <- suppressMessages(submit_form(sessao, preenchido))
-  submetido <- submetido %>% follow_link('Login')
+  submetido <- suppressMessages(submetido %>% follow_link('Login'))
 
   if (any(grepl('/[0-9]{8}/', submetido$url))) { #codigo de usuario no link
     message('Login realizado com sucesso')
