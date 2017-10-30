@@ -1,4 +1,4 @@
-Package: valor
+Package: valorar
 Type: Package
 Title: Ler Noticias do Valor
 Version: 0.1.0
@@ -11,5 +11,6 @@ LazyData: true
 Depends: rvest
 RoxygenNote: 6.0.1
 Suggests: knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
 VignetteBuilder: knitr
