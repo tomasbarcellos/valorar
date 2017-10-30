@@ -1,0 +1,38 @@
+# valor
+
+## Instalar o pacote
+
+```{r, eval = FALSE}
+# install.packages('devtools')
+devtools::install_github('tomasbarcellos/valor')
+```
+
+## Uso do pacote
+
+```{r}
+library(valor)
+email <- 'meu-email@provedor'
+senha <- 'minha_senha'
+sessao_logada <- login(email, senha)
+str(sessao_logada)
+```
+
+## Lendo noticias
+
+```{r}
+links_noticias <- conectado %>% read_html() %>% html_nodes('.teaser-title a') %>% html_attr('href') %>% 
+  ifelse(test = grepl(pattern = '\\bhttp', x = .), no = paste0('http://www.valor.com.br', .))
+
+noticias <- conectado %>% ler_noticia(links_noticias)
+```
+
+A resposta da função `ler_noticia` é um objeto de classe `noticia`.
+
+```{r}
+noticias[[1]]
+```
+
+```{r}
+str(noticias[[1]])
+```
+
