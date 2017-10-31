@@ -12,7 +12,7 @@ login <- function(email, senha) {
   url <- 'http://www.valor.com.br/login'
   sessao <- html_session(url)
   indice_login <- sessao %>% html_nodes('form') %>% html_attr('id') %>%
-    `==`('user-login') %>% which()
+    grep(pattern = 'login')
   formulario <- html_form(sessao)[[indice_login]]
   preenchido <- set_values(formulario, mail = email, pass = senha)
   submetido <- suppressMessages(submit_form(sessao, preenchido))

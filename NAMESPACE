@@ -3,3 +3,4 @@
 S3method(print,noticia)
 export(ler_noticia)
 export(login)
+export(procurar_valor)
