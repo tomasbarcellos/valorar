@@ -15,9 +15,13 @@ before_install:
   - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin
   - Rscript -e 'install.packages("devtools"); devtools::install_deps(dependencies = TRUE)'
 
-install:
-  - R CMD build --no-build-vignettes .
-  - R CMD check --no-vignettes *tar.gz
+warnings_are_errors: FALSE
+
+r_build_args: '--no-build-vignettes'
+r_check_args: '--ignore-vignettes'
+
+R:
+  - release
 
 after_success:
   - Rscript -e 'covr::codecov()'
