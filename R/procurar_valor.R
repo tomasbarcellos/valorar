@@ -17,22 +17,23 @@
 #' }
 #'
 procurar_valor <- function(termo, sessao = rvest::html_session('http://www.valor.com.br'), paginas = 5) {
+  requireNamespace('wdman', quietly = TRUE)
+  requireNamespace('binman', quietly = TRUE)
   url <- paste0('http://www.valor.com.br/busca/', termo)
   tf <- tempfile(fileext = '.html')
 
-  os_arch <- utils::getFromNamespace('os_arch', 'wdman')
-
-  arq <- switch(Sys.info()["sysname"],
-                Linux = os_arch("linux"), Windows = 'windows',
-                Darwin = 'macos', stop("Unknown OS"))
-
-  phantom_ver <- utils::getFromNamespace('phantom_ver', 'wdman')
-
-  caminho <- phantom_ver(arq, '2.1.1')
+  # os_arch <- utils::getFromNamespace('os_arch', 'wdman')
+  # phantom_ver <- utils::getFromNamespace('phantom_ver', 'wdman')
+  #
+  # arq <- switch(Sys.info()["sysname"],
+  #               Linux = os_arch("linux"), Windows = 'windows',
+  #               Darwin = 'macos', stop("Unknown OS"))
+  #
+  # caminho <- phantom_ver(arq, '2.1.1')
 
   JS <- system.file('js','phantom.js', package = 'valorar')
 
-  system('cmd.exe', input = paste(caminho$path, JS, url, tf), intern = TRUE)
+  system('cmd.exe', input = paste(phantomJS()$path, JS, url, tf), intern = TRUE)
 
   html <- read_html(tf)
   links <- html %>% html_nodes('.title2 a') %>% html_attr('href')
