@@ -19,4 +19,5 @@ Suggests:
 VignetteBuilder: knitr
 Imports:
     wdman,
-    xml2
+    xml2,
+    magrittr

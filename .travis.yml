@@ -4,8 +4,9 @@ language: R
 sudo: false
 cache: packages
 
-r:
-- release
+install:
+- R CMD build --no-build-vignettes .
+- R CMD check --no-vignettes *tar.gz
 
 after_success:
 - Rscript -e 'covr::codecov()'
