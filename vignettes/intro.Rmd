@@ -1,5 +1,5 @@
 ---
-title: "Introdução ao valor"
+title: "Introdução ao valorar"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introducao ao valor}
@@ -29,10 +29,7 @@ sessao_logada
 
 ```{r, echo = FALSE}
 library(valorar)
-config <- readLines('../.valor')
-email <- config[1]
-senha <- config[2]
-sessao_logada <- login(email, senha)
+sessao_logada <- login('', '')
 # dar uma olhada do objeto da sessao
 sessao_logada
 ```
