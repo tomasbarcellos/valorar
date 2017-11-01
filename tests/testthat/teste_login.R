@@ -6,7 +6,7 @@ test_that('Meta informações da resposta', {
 })
 
 # Se não está no servidor
-if (grep('win', Sys.info()[['sysname']], ignore.case = TRUE)) {
+if (.Platform$OS.type == 'windows') {
   test_that('Faz login corretamente', {
     config <- readLines('../../.valor')
     expect_message(sessao_logada <- login(config[1], config[2]), 'Login realizado com sucesso')
