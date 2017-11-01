@@ -1,4 +1,4 @@
-#' Realizar Login no site do Valor
+#' Realizar Login no site do Valor Economico
 #'
 #' @param email e-mail da conta realizar login no site do valor
 #' @param senha senha para realizar login no site do valor
@@ -12,6 +12,7 @@
 #' @importFrom magrittr '%>%'
 #'
 #' @examples
+#' login('fulado@provador.org', 'senha')
 #'
 login <- function(email, senha) {
   url <- 'http://www.valor.com.br/login'

@@ -1,4 +1,8 @@
-#' Title
+#' Procurar noticias no site do jornal Valor Economico
+#'
+#' @importFrom utils getFromNamespace
+#' @importFrom stringr str_extract
+#' @importFrom magrittr extract2
 #'
 #' @param termo Termo buscado
 #' @param sessao Sessao
@@ -8,29 +12,36 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' procurar_valor('desemprego')
+#' }
+#'
 procurar_valor <- function(termo, sessao = rvest::html_session('http://www.valor.com.br'), paginas = 5) {
   url <- paste0('http://www.valor.com.br/busca/', termo)
   tf <- tempfile(fileext = '.html')
 
+  os_arch <- utils::getFromNamespace('os_arch', 'wdman')
+
   arq <- switch(Sys.info()["sysname"],
-                Linux = wdman:::os_arch("linux"), Windows = 'windows',
+                Linux = os_arch("linux"), Windows = 'windows',
                 Darwin = 'macos', stop("Unknown OS"))
 
-  caminho <- wdman:::phantom_ver(arq, '2.1.1')
+  phantom_ver <- utils::getFromNamespace('phantom_ver', 'wdman')
+
+  caminho <- phantom_ver(arq, '2.1.1')
 
   JS <- system.file('js','phantom.js', package = 'valorar')
-  system('cmd.exe', input = paste(caminho$path, JS, url, tf))
+
+  system('cmd.exe', input = paste(caminho$path, JS, url, tf), intern = TRUE)
 
   html <- read_html(tf)
   links <- html %>% html_nodes('.title2 a') %>% html_attr('href')
   resultados <- html %>% html_nodes('.search-result-term') %>% html_text() %>%
-    `[[`(1) %>%
+    magrittr::extract2(1) %>%
     gsub(pattern = '\t', replacement = '') %>%
     stringr::str_extract('de [0-9]+') %>%
     gsub(pattern = 'de *', replacement = '') %>%
     as.numeric()
-
 
   # paginacao: paste0(url, '?page=', 1, '&method=ajax')
 

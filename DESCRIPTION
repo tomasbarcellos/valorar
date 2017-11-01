@@ -5,12 +5,13 @@ Version: 0.1.0
 Author: Tomas Barcellos
 Maintainer: Tomas Barcellos <tomas.barcellos@gmail.com>
 Description: Pacote para ler noticias do Valor e extrair informacoes
-License: GPL 3.0
+License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends:
+    R (>= 3.1.0),
     rvest
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1
 Suggests:
     knitr,
     rmarkdown,
@@ -20,4 +21,5 @@ VignetteBuilder: knitr
 Imports:
     wdman,
     xml2,
-    magrittr
+    magrittr,
+    stringr

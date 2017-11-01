@@ -6,9 +6,10 @@ test_that('Meta informações da resposta', {
 })
 
 # Se não está no servidor
-if (.Platform$OS.type == 'windows') {
+if (.Platform$OS.type == 'windows' && file.exists('../../.valor')) {
   test_that('Faz login corretamente', {
     config <- readLines('../../.valor')
+
     expect_message(sessao_logada <- login(config[1], config[2]), 'Login realizado com sucesso')
     expect_true(any(grepl('[0-9]{8}', sessao_logada$back)))
     expect_true(any(grepl('SESS', sessao_logada$response$cookies$name)))
