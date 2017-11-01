@@ -13,13 +13,13 @@ vignette: >
 
 ```{r, eval = FALSE}
 # install.packages('devtools')
-devtools::install_github('tomasbarcellos/valor')
+devtools::install_github('tomasbarcellos/valorar')
 ```
 
 ## Uso do pacote
 
 ```{r, eval = FALSE}
-library(valor)
+library(valorar)
 email <- 'meu-email@provedor'
 senha <- 'minha_senha'
 sessao_logada <- login(email, senha)
@@ -51,8 +51,5 @@ A resposta da função `ler_noticia` é um objeto de classe `noticia`.
 
 ```{r}
 noticias[[1]]
-```
-
-```{r}
 ```
 
