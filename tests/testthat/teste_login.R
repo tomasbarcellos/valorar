@@ -1,7 +1,5 @@
 context('login()')
 
-library(valorar)
-
 config <- readLines('../../.valor')
 
 test_that('Meta informações da resposta', {

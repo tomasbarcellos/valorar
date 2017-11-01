@@ -8,6 +8,7 @@
 #' @export
 #'
 #' @examples
+#' procurar_valor('desemprego')
 procurar_valor <- function(termo, sessao = rvest::html_session('http://www.valor.com.br'), paginas = 5) {
   url <- paste0('http://www.valor.com.br/busca/', termo)
   tf <- tempfile(fileext = '.html')
@@ -18,7 +19,7 @@ procurar_valor <- function(termo, sessao = rvest::html_session('http://www.valor
 
   caminho <- wdman:::phantom_ver(arq, '2.1.1')
 
-  JS <- if(file.exists('phantom.js')) 'phantom.js' else '../../phantom.js'
+  JS <- system.file('js','phantom.js', package = 'valorar')
   system('cmd.exe', input = paste(caminho$path, JS, url, tf))
 
   html <- read_html(tf)

@@ -5,6 +5,11 @@
 #'
 #' @return Uma sessao conectada ao usuario
 #' @export
+#' @importFrom rvest follow_link html_attr html_children html_form html_node
+#' @importFrom rvest html_nodes html_session html_text jump_to set_values submit_form
+#' @importFrom xml2 read_html
+#' @importFrom stats rnorm
+#' @importFrom magrittr '%>%'
 #'
 #' @examples
 #'

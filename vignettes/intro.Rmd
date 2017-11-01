@@ -7,7 +7,7 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-# valor
+# valorar
 
 ## Instalar o pacote
 
@@ -28,7 +28,7 @@ sessao_logada
 ```
 
 ```{r, echo = FALSE}
-library(valor)
+library(valorar)
 config <- readLines('../.valor')
 email <- config[1]
 senha <- config[2]
