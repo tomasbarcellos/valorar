@@ -1,10 +1,10 @@
 #' Title
 #'
-#' @param termo
-#' @param sessao
-#' @param paginas
+#' @param termo Termo buscado
+#' @param sessao Sessao
+#' @param paginas numero de paginas que serao retornadas
 #'
-#' @return
+#' @return Uma sessao com resultados da busca
 #' @export
 #'
 #' @examples

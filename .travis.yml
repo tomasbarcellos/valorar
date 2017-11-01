@@ -5,7 +5,7 @@ sudo: false
 cache: packages
 
 install:
-- R -e 'devtools::install_deps(dep = T)'
+- R -e 'install.packages("devtools"); devtools::install_deps(dep = T)'
 
 script:
 - R CMD build .
