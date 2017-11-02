@@ -3,13 +3,14 @@ sudo: required
 language: R
 cache: packages
 
-r_github_packages:
-- hadley/devtools
-- johndharrison/wdman
-- hadley/rvest
-- sjp/selectr
-
 warnings_are_errors: FALSE
+
+r_packages:
+  - devtools
+  - wdman
+  - rvest
+  - selectr
+  - tibble
 
 r_build_args: '--no-build-vignettes'
 r_check_args: '--ignore-vignettes'
@@ -17,6 +18,7 @@ r_check_args: '--ignore-vignettes'
 env:
   matrix:
   - NOT_CRAN=true
+
 R:
 - release
 
