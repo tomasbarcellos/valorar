@@ -7,7 +7,7 @@
 ler_noticia(sessao = html_session("http://www.valor.com.br"), url)
 }
 \arguments{
-\item{sessao}{Uma sessao. Veja \link{rvest::html_session()}}
+\item{sessao}{Uma sessao criada por \code{\link{html_session}}}
 
 \item{url}{O link para uma noticia}
 }

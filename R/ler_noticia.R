@@ -1,7 +1,7 @@
 #' Tira informacoes da noticia
 #'
 #' @importFrom tibble tibble
-#' @param sessao Uma sessao. Veja \link{rvest::html_session()}
+#' @param sessao Uma sessao criada por \code{\link{html_session}}
 #' @param url O link para uma noticia
 #'
 #' @return Uma lista com o html, o titulo, os autores, as tags e o texto da noticia
