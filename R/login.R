@@ -1,12 +1,18 @@
-#' Realizar Login no site do Valor
+#' Realizar Login no site do Valor Economico
 #'
 #' @param email e-mail da conta realizar login no site do valor
 #' @param senha senha para realizar login no site do valor
 #'
 #' @return Uma sessao conectada ao usuario
 #' @export
+#' @importFrom rvest follow_link html_attr html_children html_form html_node
+#' @importFrom rvest html_nodes html_session html_text jump_to set_values submit_form
+#' @importFrom xml2 read_html
+#' @importFrom stats rnorm
+#' @importFrom magrittr '%>%'
 #'
 #' @examples
+#' login('fulado@provador.org', 'senha')
 #'
 login <- function(email, senha) {
   url <- 'http://www.valor.com.br/login'

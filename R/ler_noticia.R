@@ -7,8 +7,10 @@
 #' @export
 #'
 #' @examples
-#' # Comentario
-ler_noticia <- function(sessao, url) {
+#' url_noticia <- 'http://www.valor.com.br/brasil/5179248/ipc-s-tem-alta-de-033-em-outubro-aponta-fgv'
+#' ler_noticia(url = url_noticia)
+#'
+ler_noticia <- function(sessao = html_session('http://www.valor.com.br'), url) {
   if (length(url) > 1) {
     com_lag <- function(url, sessao) {
       Sys.sleep(abs(rnorm(1)))
@@ -45,8 +47,6 @@ ler_noticia <- function(sessao, url) {
 #' @return O mesmo objeto passado em \code{x}
 #' @export
 #'
-#' @examples
-#' #' # Comentario
 print.noticia <- function(x, ...) {
   cat('<noticia>\n')
   cat(toupper(x$titulo), '\n')

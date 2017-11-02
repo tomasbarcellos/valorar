@@ -1,5 +1,5 @@
 ---
-title: "Introdução ao valor"
+title: "Introdução ao valorar"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introducao ao valor}
@@ -7,19 +7,19 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-# valor
+# valorar
 
 ## Instalar o pacote
 
 ```{r, eval = FALSE}
 # install.packages('devtools')
-devtools::install_github('tomasbarcellos/valor')
+devtools::install_github('tomasbarcellos/valorar')
 ```
 
 ## Uso do pacote
 
 ```{r, eval = FALSE}
-library(valor)
+library(valorar)
 email <- 'meu-email@provedor'
 senha <- 'minha_senha'
 sessao_logada <- login(email, senha)
@@ -28,11 +28,8 @@ sessao_logada
 ```
 
 ```{r, echo = FALSE}
-library(valor)
-config <- readLines('../.valor')
-email <- config[1]
-senha <- config[2]
-sessao_logada <- login(email, senha)
+library(valorar)
+sessao_logada <- login('', '')
 # dar uma olhada do objeto da sessao
 sessao_logada
 ```
@@ -51,8 +48,5 @@ A resposta da função `ler_noticia` é um objeto de classe `noticia`.
 
 ```{r}
 noticias[[1]]
-```
-
-```{r}
 ```
 

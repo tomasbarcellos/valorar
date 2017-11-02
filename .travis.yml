@@ -4,12 +4,24 @@ language: R
 sudo: false
 cache: packages
 
-install:
-- R -e 'devtools::install_deps(dep = T)'
+before_install:
+  - sudo apt-get install build-essential chrpath libssl-dev libxft-dev
+  - sudo apt-get install libfreetype6 libfreetype6-dev
+  - sudo apt-get install libfontconfig1 libfontconfig1-dev
+  - export PHANTOM_JS="phantomjs-2.1.1-linux-i686"
+  - wget https://bitbucket.org/ariya/phantomjs/downloads/$PHANTOM_JS.tar.bz2
+  - sudo tar xvjf $PHANTOM_JS.tar.bz2
+  - sudo mv $PHANTOM_JS /usr/local/share
+  - sudo ln -sf /usr/local/share/$PHANTOM_JS/bin/phantomjs /usr/local/bin
+  - Rscript -e 'install.packages("devtools"); devtools::install_deps(dependencies = TRUE)'
 
-script:
-- R CMD build .
-- R CMD check *tar.gz
+warnings_are_errors: FALSE
+
+r_build_args: '--no-build-vignettes'
+r_check_args: '--ignore-vignettes'
+
+R:
+  - release
 
 after_success:
-- Rscript -e 'covr::codecov()'
+  - Rscript -e 'covr::codecov()'

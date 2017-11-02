@@ -1,7 +1,5 @@
 context('ler_noticia()')
 
-library(valorar)
-
 sessao <- suppressWarnings(login('', ''))
 links <- sessao %>% read_html() %>% html_nodes('.teaser-title a') %>%
   html_attr('href') %>%  `[`(. != '') %>%
