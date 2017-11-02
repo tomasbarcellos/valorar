@@ -7,7 +7,11 @@
 phantomJS(version = "2.1.1", check = TRUE, verbose = FALSE)
 }
 \arguments{
-\item{version}{...}
+\item{version}{versao do phantomJS que sera buscada}
+
+\item{check}{Novas versoes de phantomJS devem ser buscadas e baixadas?}
+
+\item{verbose}{A funcao deve ser prolixa?}
 }
 \value{
 caminho do phantomJS

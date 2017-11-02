@@ -1,6 +1,6 @@
-#' Tira informações da noticia
+#' Tira informacoes da noticia
 #'
-#' @param sessao Uma sessao
+#' @param sessao Uma sessao. Veja \link{rvest::html_session()}
 #' @param url O link para uma noticia
 #'
 #' @return Uma lista com o html, o titulo, os autores, as tags e o texto da noticia
