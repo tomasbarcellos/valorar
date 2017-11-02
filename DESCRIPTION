@@ -23,4 +23,5 @@ Imports:
     xml2,
     magrittr,
     stringr,
-    tibble
+    tibble,
+    binman
