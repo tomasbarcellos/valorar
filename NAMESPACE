@@ -2,6 +2,7 @@
 
 S3method(print,noticia)
 export(ler_noticia)
+export(links_pagina)
 export(login)
 export(procurar_valor)
 importFrom(magrittr,'%>%')
