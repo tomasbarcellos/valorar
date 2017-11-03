@@ -12,7 +12,7 @@
 #' @importFrom magrittr '%>%'
 #'
 #' @examples
-#' login('fulado@provador.org', 'senha')
+#' login('fulano@provedor.org', 'senha')
 #'
 login <- function(email, senha) {
   url <- 'http://www.valor.com.br/login'
@@ -24,11 +24,12 @@ login <- function(email, senha) {
   submetido <- suppressMessages(submit_form(sessao, preenchido))
   submetido <- suppressMessages(submetido %>% follow_link('Login'))
 
-  if (any(grepl('/[0-9]{8}/', submetido$url))) { #codigo de usuario no link
+  if (any(grepl('/[0-9]{8}/', submetido$url))) { # codigo de usuario no link
     message('Login realizado com sucesso')
   } else {
     warning('Houve falha no login\n', call. = FALSE)
   }
 
+  # Pula para nao expor id do usuario logado
   submetido %>% jump_to('http://www.valor.com.br')
 }

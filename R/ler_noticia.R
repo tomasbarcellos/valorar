@@ -1,6 +1,7 @@
-#' Tira informações da noticia
+#' Tira informacoes da noticia
 #'
-#' @param sessao Uma sessao
+#' @importFrom tibble tibble
+#' @param sessao Uma sessao criada por \code{\link{html_session}}
 #' @param url O link para uma noticia
 #'
 #' @return Uma lista com o html, o titulo, os autores, as tags e o texto da noticia
@@ -17,7 +18,7 @@ ler_noticia <- function(sessao = html_session('http://www.valor.com.br'), url) {
       try(ler_noticia(sessao, url))
     }
     return(lapply(url, com_lag, sessao = sessao))
-  }
+  } # else {faça o resto}
 
   pagina <- sessao %>% jump_to(url) %>% read_html()
   noticia <- pagina %>% html_node('.noticia_sem_img')
@@ -34,8 +35,8 @@ ler_noticia <- function(sessao = html_session('http://www.valor.com.br'), url) {
   }
 
   structure(
-    list(html = pagina, titulo = titulo, autor = autor, tags = tags, texto = texto),
-    class = 'noticia'
+    tibble::tibble(html = list(pagina), titulo = titulo, autor = autor, tags = list(tags), texto = list(texto)),
+    class = c('noticia', 'tbl_df', 'tbl', 'data.frame')
   )
 }
 
@@ -48,10 +49,20 @@ ler_noticia <- function(sessao = html_session('http://www.valor.com.br'), url) {
 #' @export
 #'
 print.noticia <- function(x, ...) {
-  cat('<noticia>\n')
-  cat(toupper(x$titulo), '\n')
-  cat(x$autor, '\n\n')
-  cat(substr(x$texto, 1, 80), '...\n...\n')
-  cat('(', length(x$tags), ') tags: ', paste(x$tags, collapse = ', '), sep = '')
-  invisible(x)
+  X <- x
+  tamanho <- nrow(x)
+  cat('<', tamanho, ' noticia', if (tamanho > 1) 's' else '', '>\n\n', sep = '')
+
+  if (tamanho > 3) x <- x[1:3, ]
+
+  for (linha in seq_len(nrow(x))) {
+    cat(toupper(x$titulo[linha]), '\n')
+    cat(x$autor[linha], '\n\n')
+    cat(substr(unlist(x$texto[linha])[1], 1, 200), '...\n...\n')
+    cat('(', length(unlist(x$tags[linha])), ') tags: ',
+        paste(unlist(x$tags[linha]), collapse = ', '), sep = '')
+    cat('\n--------------------', if(linha ==3) '' else '\n\n')
+  }
+
+  invisible(X)
 }
