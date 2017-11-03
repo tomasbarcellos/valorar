@@ -2,12 +2,12 @@
 % Please edit documentation in R/ler_noticia.R
 \name{ler_noticia}
 \alias{ler_noticia}
-\title{Tira informações da noticia}
+\title{Tira informacoes da noticia}
 \usage{
 ler_noticia(sessao = html_session("http://www.valor.com.br"), url)
 }
 \arguments{
-\item{sessao}{Uma sessao}
+\item{sessao}{Uma sessao criada por \code{\link{html_session}}}
 
 \item{url}{O link para uma noticia}
 }
@@ -15,7 +15,7 @@ ler_noticia(sessao = html_session("http://www.valor.com.br"), url)
 Uma lista com o html, o titulo, os autores, as tags e o texto da noticia
 }
 \description{
-Tira informações da noticia
+Tira informacoes da noticia
 }
 \examples{
 url_noticia <- 'http://www.valor.com.br/brasil/5179248/ipc-s-tem-alta-de-033-em-outubro-aponta-fgv'

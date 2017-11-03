@@ -22,4 +22,6 @@ Imports:
     wdman,
     xml2,
     magrittr,
-    stringr
+    stringr,
+    tibble,
+    binman

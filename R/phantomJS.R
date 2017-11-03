@@ -1,6 +1,8 @@
 #' Pegar caminho e versao do phantomJS
 #'
-#' @param version ...
+#' @param version versao do phantomJS que sera buscada
+#' @param check Novas versoes de phantomJS devem ser buscadas e baixadas?
+#' @param verbose A funcao deve ser prolixa?
 #'
 #' @return caminho do phantomJS
 #'

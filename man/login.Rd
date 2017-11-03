@@ -18,6 +18,6 @@ Uma sessao conectada ao usuario
 Realizar Login no site do Valor Economico
 }
 \examples{
-login('fulado@provador.org', 'senha')
+login('fulano@provedor.org', 'senha')
 
 }
