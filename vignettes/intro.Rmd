@@ -51,3 +51,61 @@ A resposta da função `ler_noticia` é um objeto de classe `noticia`.
 noticias[[1]]
 ```
 
+# Pequeno exemplo de uso
+
+## Pegando dados
+
+```{r}
+library(valorar)
+library(magrittr)
+library(purrr)
+
+resposta <- sessao_logada %>% procurar_valor(termo = 'eleicoes')
+
+links_eleicoes <- attr(resposta, 'links')
+
+noticias_eleicoes <- map(links_eleicoes, safely(ler_noticia),
+                         sessao = conectado) %>% map('result') %>% 
+  extract(!sapply(., is.null)) %>% 
+  map_df(~ .x)
+```
+
+## Visualizando informações
+
+```{r}
+noticias_eleicoes$tags %>% unlist() %>% table() %>%
+  sort(decreasing = TRUE) %>% magrittr::extract(. > 1)
+```
+
+```{r}
+library(dplyr)
+library(tidytext)
+library(tm)
+
+# Texto é uma lista, precisa ser vetor para tidytext
+noticias_df <- noticias_eleicoes %>% mutate(texto = paste(unlist(texto), collapse = " "))
+
+tidy_noticias <- noticias_df %>% select(titulo, texto) %>% 
+  unnest_tokens(palavra, texto)
+
+stop_pt <- tibble(palavra = c(stopwords('pt-br'), 'sobre'))
+
+
+noticias_limpo <- tidy_noticias %>% anti_join(stop_pt)
+
+# 10 Palavras mais comuns
+noticias_limpo %>% 
+  count(palavra, sort = TRUE)
+
+# Nuvem de palavras
+library(wordcloud)
+minha_nuvem <- function(palavras, freq) {
+  wordcloud(palavras, freq, max.words = 100,
+                      random.color = TRUE, colors = c('orange', 'darkblue', 'lightgray'))
+}
+
+noticias_limpo %>% 
+  count(palavra, sort = TRUE) %>% 
+  with(minha_nuvem(palavra, n))
+```
+
