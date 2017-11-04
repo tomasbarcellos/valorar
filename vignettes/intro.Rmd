@@ -56,7 +56,6 @@ noticias[[1]]
 ## Pegando dados
 
 ```{r}
-library(valorar)
 library(magrittr)
 library(purrr)
 
@@ -65,7 +64,7 @@ resposta <- sessao_logada %>% procurar_valor(termo = 'eleicoes')
 links_eleicoes <- attr(resposta, 'links')
 
 noticias_eleicoes <- map(links_eleicoes, safely(ler_noticia),
-                         sessao = conectado) %>% map('result') %>% 
+                         sessao = sessao_logada) %>% map('result') %>% 
   extract(!sapply(., is.null)) %>% 
   map_df(~ .x)
 ```
@@ -89,7 +88,6 @@ tidy_noticias <- noticias_df %>% select(titulo, texto) %>%
   unnest_tokens(palavra, texto)
 
 stop_pt <- tibble(palavra = c(stopwords('pt-br'), 'sobre'))
-
 
 noticias_limpo <- tidy_noticias %>% anti_join(stop_pt)
 
