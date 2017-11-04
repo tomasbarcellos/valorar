@@ -7,6 +7,7 @@
 #' @export
 #'
 #' @examples
+#' links_pagina()
 links_pagina <- function(sessao = html_session('http://www.valor.com.br'), css = '.teaser-title a') {
   sessao %>% read_html() %>% html_nodes(css) %>% html_attr('href') %>%
     magrittr::extract(. != '') %>%

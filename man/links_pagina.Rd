@@ -18,3 +18,6 @@ Uma string com os links da pagina no css
 \description{
 Pega noticias da sessao
 }
+\examples{
+links_pagina()
+}
