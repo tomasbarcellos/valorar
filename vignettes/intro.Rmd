@@ -101,7 +101,10 @@ minha_nuvem <- function(palavras, freq) {
   wordcloud(palavras, freq, max.words = 100,
                       random.color = TRUE, colors = c('orange', 'darkblue', 'lightgray'))
 }
+```
 
+
+```{r, fig.height=7, fig.width=10}
 noticias_limpo %>% 
   count(palavra, sort = TRUE) %>% 
   with(minha_nuvem(palavra, n))
