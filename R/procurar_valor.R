@@ -16,17 +16,22 @@
 #' procurar_valor('desemprego')
 #' }
 #'
-procurar_valor <- function(termo, sessao = rvest::html_session('http://www.valor.com.br'), paginas = 5) {
+procurar_valor <- function(termo, #sessao = rvest::html_session('http://www.valor.com.br'),
+                           paginas = 5) {
   requireNamespace('wdman', quietly = TRUE)
   requireNamespace('binman', quietly = TRUE)
 
+  renderizar_ler <- function(url) {
+    tf <- tempfile(fileext = '.html')
+    JS <- system.file('js','phantom.js', package = 'valorar')
+
+    system(paste(phantomJS()$path, JS, url, tf), intern = TRUE)
+
+    read_html(tf)
+  }
+
   url <- paste0('http://www.valor.com.br/busca/', termo)
-  tf <- tempfile(fileext = '.html')
-  JS <- system.file('js','phantom.js', package = 'valorar')
-
-  system(paste(phantomJS()$path, JS, url, tf), intern = TRUE)
-
-  html <- read_html(tf)
+  html <- renderizar_ler(url)
   links <- html %>% html_nodes('.title2 a') %>% html_attr('href')
   resultados <- html %>% html_nodes('.search-result-term') %>% html_text() %>%
     magrittr::extract2(1) %>%
@@ -35,12 +40,19 @@ procurar_valor <- function(termo, sessao = rvest::html_session('http://www.valor
     gsub(pattern = 'de *', replacement = '') %>%
     as.numeric()
 
-  # paginacao: paste0(url, '?page=', 1, '&method=ajax')
+  # if (paginas != 1) {
+  #   paginacao <- paste0(url, '?page=', seq_len(resultados/10), '&method=ajax')
+  #   links2 <- purrr::map_chr(paginacao[seq_len(paginas)][-1],
+  #                            ~ renderizar_ler(.x) %>% links_pagina('.title2 a'))
+  #   links <- c(links, links2)
+  # }
 
-  attr(sessao, 'pagina') <- 1
-  attr(sessao, 'resultados') <- resultados
-  attr(sessao, 'links') <- links
-  sessao
+  # attr(sessao, 'pagina') <- 1
+  # attr(sessao, 'resultados') <- resultados
+  # attr(sessao, 'links') <- links
+  # sessao
+
+  links
 }
 
 

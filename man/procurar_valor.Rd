@@ -4,15 +4,14 @@
 \alias{procurar_valor}
 \title{Procurar noticias no site do jornal Valor Economico}
 \usage{
-procurar_valor(termo, sessao = rvest::html_session("http://www.valor.com.br"),
-  paginas = 5)
+procurar_valor(termo, paginas = 5)
 }
 \arguments{
 \item{termo}{Termo buscado}
 
-\item{sessao}{Sessao}
-
 \item{paginas}{numero de paginas que serao retornadas}
+
+\item{sessao}{Sessao}
 }
 \value{
 Uma sessao com resultados da busca

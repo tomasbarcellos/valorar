@@ -17,52 +17,40 @@ ler_noticia <- function(sessao = html_session('http://www.valor.com.br'), url) {
       Sys.sleep(abs(rnorm(1)))
       try(ler_noticia(sessao, url))
     }
-    return(lapply(url, com_lag, sessao = sessao))
+    return(purrr::map_df(url, com_lag, sessao = sessao))
   } # else {faça o resto}
 
   pagina <- sessao %>% jump_to(url) %>% read_html()
-  noticia <- pagina %>% html_node('.noticia_sem_img')
+
+  noticia <- pagina %>% html_node('#content-area')
+
+  datahora <- noticia %>% html_node('.date.submitted') %>% html_text() %>%
+    stringr::str_replace('às', '') %>%
+    lubridate::dmy_hm(tz = 'America/Sao_Paulo')
+
   titulo <- noticia %>% html_node('.title1') %>% html_text()
+
   autor <- noticia %>% html_node('.node-author-inner') %>% html_text()
+
+  if (is.na(autor)) {
+    autor <- noticia %>% html_node('.post-secao-valor-investe') %>% html_text() %>%
+      stringr::str_extract('Postado.+\\r\\n') %>%
+      stringr::str_replace('Postado.+: ', '') %>%
+      stringr::str_replace_all('[\\r|\\n]', '')
+  }
+
   tags <- noticia %>% html_nodes('.tags a') %>% html_text() %>%
     stringr::str_replace_all('\\n *', '')
+
   body <- noticia %>% html_nodes('.node-body')
 
   if (length(html_children(body)) == 0 ) {
-    texto <- body %>% html_text()
+    texto <- body %>% html_text() %>% paste0(collapse = '\n')
   } else {
-    texto <- body %>% html_nodes('p') %>% html_text()
+    texto <- body %>% html_nodes('p') %>% html_text() %>%
+      paste0(collapse = '\n')
   }
 
-  structure(
-    tibble::tibble(html = list(pagina), titulo = titulo, autor = autor, tags = list(tags), texto = list(texto)),
-    class = c('noticia', 'tbl_df', 'tbl', 'data.frame')
-  )
-}
-
-#' Método para imprimir noticia
-#'
-#' @param x Objeto que vai imprimir
-#' @param ... Outros argumento repassados para print
-#'
-#' @return O mesmo objeto passado em \code{x}
-#' @export
-#'
-print.noticia <- function(x, ...) {
-  X <- x
-  tamanho <- nrow(x)
-  cat('<', tamanho, ' noticia', if (tamanho > 1) 's' else '', '>\n\n', sep = '')
-
-  if (tamanho > 3) x <- x[1:3, ]
-
-  for (linha in seq_len(nrow(x))) {
-    cat(toupper(x$titulo[linha]), '\n')
-    cat(x$autor[linha], '\n\n')
-    cat(substr(unlist(x$texto[linha])[1], 1, 200), '...\n...\n')
-    cat('(', length(unlist(x$tags[linha])), ') tags: ',
-        paste(unlist(x$tags[linha]), collapse = ', '), sep = '')
-    cat('\n--------------------', if(linha ==3) '' else '\n\n')
-  }
-
-  invisible(X)
+  tibble::tibble(url = url, datahora = datahora, titulo = titulo, autor = autor,
+                 texto = texto, tags = list(tags))
 }
