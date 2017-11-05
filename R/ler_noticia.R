@@ -21,20 +21,36 @@ ler_noticia <- function(sessao = html_session('http://www.valor.com.br'), url) {
   } # else {faça o resto}
 
   pagina <- sessao %>% jump_to(url) %>% read_html()
-  noticia <- pagina %>% html_node('.noticia_sem_img')
+
+  noticia <- pagina %>% html_node('#content-area')
+
+  datahora <- noticia %>% html_node('.date.submitted') %>% html_text() %>%
+    stringr::str_replace('às', '') %>%
+    lubridate::dmy_hm(tz = 'America/Sao_Paulo')
+
   titulo <- noticia %>% html_node('.title1') %>% html_text()
+
   autor <- noticia %>% html_node('.node-author-inner') %>% html_text()
+
+  if (is.na(autor)) {
+    autor <- noticia %>% html_node('.post-secao-valor-investe') %>% html_text() %>%
+      stringr::str_extract('Postado.+\\r\\n') %>%
+      stringr::str_replace('Postado.+: ', '') %>%
+      stringr::str_replace_all('[\\r|\\n]', '')
+  }
+
   tags <- noticia %>% html_nodes('.tags a') %>% html_text() %>%
     stringr::str_replace_all('\\n *', '')
+
   body <- noticia %>% html_nodes('.node-body')
 
   if (length(html_children(body)) == 0 ) {
-    texto <- body %>% html_text()
+    texto <- body %>% html_text() %>% paste0(collapse = '\n')
   } else {
-    texto <- body %>% html_nodes('p') %>% html_text()
+    texto <- body %>% html_nodes('p') %>% html_text() %>%
+      paste0(collapse = '\n')
   }
 
-  tibble::tibble(html = list(pagina), titulo = titulo, autor = autor, tags = list(tags), texto = list(texto))
+  tibble::tibble(url = url, datahora = datahora, titulo = titulo, autor = autor,
+                 texto = texto, tags = list(tags))
 }
-
-
