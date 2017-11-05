@@ -8,8 +8,10 @@
 #'
 #' @examples
 #' links_pagina()
-links_pagina <- function(sessao = html_session('http://www.valor.com.br'), css = '.teaser-title a') {
-  sessao %>% read_html() %>% html_nodes(css) %>% html_attr('href') %>%
+links_pagina <- function(html, css = '.teaser-title a') {
+  if (missing(html)) html <- html_session('http://www.valor.com.br')
+  html %>% html_nodes(css) %>% html_attr('href') %>%
     magrittr::extract(. != '') %>%
-    ifelse(test = grepl(pattern = '\\bhttp', x = .), no = paste0('http://www.valor.com.br', .))
+    ifelse(test = grepl(pattern = '\\bhttp', x = .),
+           no = paste0('http://www.valor.com.br', .))
 }

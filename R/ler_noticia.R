@@ -17,7 +17,7 @@ ler_noticia <- function(sessao = html_session('http://www.valor.com.br'), url) {
       Sys.sleep(abs(rnorm(1)))
       try(ler_noticia(sessao, url))
     }
-    return(lapply(url, com_lag, sessao = sessao))
+    return(purrr::map_df(url, com_lag, sessao = sessao))
   } # else {faça o resto}
 
   pagina <- sessao %>% jump_to(url) %>% read_html()
@@ -34,35 +34,7 @@ ler_noticia <- function(sessao = html_session('http://www.valor.com.br'), url) {
     texto <- body %>% html_nodes('p') %>% html_text()
   }
 
-  structure(
-    tibble::tibble(html = list(pagina), titulo = titulo, autor = autor, tags = list(tags), texto = list(texto)),
-    class = c('noticia', 'tbl_df', 'tbl', 'data.frame')
-  )
+  tibble::tibble(html = list(pagina), titulo = titulo, autor = autor, tags = list(tags), texto = list(texto))
 }
 
-#' Método para imprimir noticia
-#'
-#' @param x Objeto que vai imprimir
-#' @param ... Outros argumento repassados para print
-#'
-#' @return O mesmo objeto passado em \code{x}
-#' @export
-#'
-print.noticia <- function(x, ...) {
-  X <- x
-  tamanho <- nrow(x)
-  cat('<', tamanho, ' noticia', if (tamanho > 1) 's' else '', '>\n\n', sep = '')
 
-  if (tamanho > 3) x <- x[1:3, ]
-
-  for (linha in seq_len(nrow(x))) {
-    cat(toupper(x$titulo[linha]), '\n')
-    cat(x$autor[linha], '\n\n')
-    cat(substr(unlist(x$texto[linha])[1], 1, 200), '...\n...\n')
-    cat('(', length(unlist(x$tags[linha])), ') tags: ',
-        paste(unlist(x$tags[linha]), collapse = ', '), sep = '')
-    cat('\n--------------------', if(linha ==3) '' else '\n\n')
-  }
-
-  invisible(X)
-}
