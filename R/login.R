@@ -15,6 +15,11 @@
 #' login('fulano@provedor.org', 'senha')
 #'
 login <- function(email, senha) {
+  ###
+  warning("Função sem uso enquanto valor não migrar totalmente para globo.com")
+  return(html_session("http://www.valor.com.br/login"))
+  ###
+
   url <- 'http://www.valor.com.br/login'
   sessao <- html_session(url)
   indice_login <- sessao %>% html_nodes('form') %>% html_attr('id') %>%

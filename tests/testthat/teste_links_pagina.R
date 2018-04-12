@@ -1,7 +1,8 @@
 context('links_pagina()')
 
 test_that('Retorna links como caracteres', {
-  expect_warning(links <<- login('', '') %>% links_pagina(), 'Houve falha no login')
+  # expect_warning(links <<- login('', '') %>% links_pagina(), 'Houve falha no login')
+  expect_warning(links <<- login('', '') %>% links_pagina(), "globo.com")
   expect_true(is.character(links))
 })
 
