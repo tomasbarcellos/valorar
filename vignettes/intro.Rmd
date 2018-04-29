@@ -7,19 +7,19 @@ vignette: >
   \usepackage[utf8]{inputenc}
 ---
 
-# valorar
+# valorrr
 
 ## Instalar o pacote
 
 ```{r, eval = FALSE}
 # install.packages('devtools')
-devtools::install_github('tomasbarcellos/valorar')
+devtools::install_github('tomasbarcellos/valorrr')
 ```
 
 ## Uso do pacote
 
 ```{r, eval = FALSE}
-library(valorar)
+library(valorrr)
 email <- 'meu-email@provedor'
 senha <- 'minha_senha'
 sessao_logada <- login(email, senha)
@@ -27,8 +27,8 @@ sessao_logada <- login(email, senha)
 sessao_logada
 ```
 
-```{r, echo = FALSE}
-library(valorar)
+```{r, echo = FALSE, eval = FALSE}
+library(valorrr)
 config <- readLines('../.valor')
 email <- config[1]
 senha <- config[2]
@@ -39,7 +39,7 @@ sessao_logada
 
 ## Lendo noticias
 
-```{r}
+```{r, eval = FALSE}
 links_noticias <- sessao_logada %>% links_pagina()
 
 noticias <- sessao_logada %>% ler_noticia(links_noticias)
@@ -47,7 +47,7 @@ noticias <- sessao_logada %>% ler_noticia(links_noticias)
 
 A resposta da função `ler_noticia` é um objeto de classe `noticia`.
 
-```{r}
+```{r, eval = FALSE}
 noticias[[1]]
 ```
 
@@ -55,7 +55,7 @@ noticias[[1]]
 
 ## Pegando dados
 
-```{r}
+```{r, eval = FALSE}
 library(magrittr)
 library(purrr)
 
@@ -71,12 +71,12 @@ noticias_eleicoes <- map(links_eleicoes, safely(ler_noticia),
 
 ## Visualizando informações
 
-```{r}
+```{r, eval = FALSE}
 noticias_eleicoes$tags %>% unlist() %>% table() %>%
   sort(decreasing = TRUE) %>% magrittr::extract(. > 1)
 ```
 
-```{r}
+```{r, eval = FALSE}
 library(dplyr)
 library(tidytext)
 library(tm)
@@ -104,7 +104,7 @@ minha_nuvem <- function(palavras, freq) {
 ```
 
 
-```{r, fig.height=7, fig.width=10}
+```{r, fig.height=7, fig.width=10, eval = FALSE}
 noticias_limpo %>% 
   count(palavra, sort = TRUE) %>% 
   with(minha_nuvem(palavra, n))

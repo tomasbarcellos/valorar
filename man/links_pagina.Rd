@@ -4,11 +4,9 @@
 \alias{links_pagina}
 \title{Pega noticias da sessao}
 \usage{
-links_pagina(html, css = ".teaser-title a")
+links_pagina(sessao)
 }
 \arguments{
-\item{css}{Seletor de css que será passado para \code{\link{html_nodes}}}
-
 \item{sessao}{Uma sessao criada por \code{\link{html_session}}}
 }
 \value{
@@ -18,5 +16,5 @@ Uma string com os links da pagina no css
 Pega noticias da sessao
 }
 \examples{
-links_pagina()
+html_session("http://www.valor.com.br") \%>\% links_pagina()
 }

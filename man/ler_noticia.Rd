@@ -4,7 +4,7 @@
 \alias{ler_noticia}
 \title{Tira informacoes da noticia}
 \usage{
-ler_noticia(sessao = html_session("http://www.valor.com.br"), url)
+ler_noticia(sessao, url)
 }
 \arguments{
 \item{sessao}{Uma sessao criada por \code{\link{html_session}}}
@@ -19,6 +19,7 @@ Tira informacoes da noticia
 }
 \examples{
 url_noticia <- 'http://www.valor.com.br/brasil/5179248/ipc-s-tem-alta-de-033-em-outubro-aponta-fgv'
-ler_noticia(url = url_noticia)
+html_session("http://www.valor.com.br") \%>\%
+  ler_noticia(url = url_noticia)
 
 }

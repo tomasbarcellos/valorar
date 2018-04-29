@@ -1,11 +1,11 @@
-context('login()')
-
-test_that('Meta informações da resposta', {
-  # expect_warning(sessao <- login('', ''), 'Houve falha no login')
-  expect_warning(sessao <- login('', ''), 'migrar totalmente')
-  expect_s3_class(sessao, 'session')
-})
-
+# context('login()')
+#
+# test_that('Meta informações da resposta', {
+#   # expect_warning(sessao <- login('', ''), 'Houve falha no login')
+#   expect_warning(sessao <- login('', ''), 'migrar totalmente')
+#   expect_s3_class(sessao, 'session')
+# })
+#
 # Se não está no servidor
 # if (.Platform$OS.type == 'windows' && file.exists('../../.valor')) {
 #   test_that('Faz login corretamente', {

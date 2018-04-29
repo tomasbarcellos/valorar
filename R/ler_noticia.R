@@ -1,31 +1,35 @@
 #' Tira informacoes da noticia
 #'
-#' @importFrom tibble tibble
 #' @param sessao Uma sessao criada por \code{\link{html_session}}
 #' @param url O link para uma noticia
 #'
 #' @return Uma lista com o html, o titulo, os autores, as tags e o texto da noticia
+#' @importFrom tibble tibble
+#' @importFrom stats rnorm
+#' @importFrom rvest jump_to html_node html_text html_nodes html_children
+#' @importFrom xml2 read_html
+#' @importFrom magrittr %>%
 #' @export
 #'
 #' @examples
 #' url_noticia <- 'http://www.valor.com.br/brasil/5179248/ipc-s-tem-alta-de-033-em-outubro-aponta-fgv'
-#' ler_noticia(url = url_noticia)
+#' html_session("http://www.valor.com.br") %>%
+#'   ler_noticia(url = url_noticia)
 #'
-ler_noticia <- function(sessao = html_session('http://www.valor.com.br'), url) {
+ler_noticia <- function(sessao, url) {
   if (length(url) > 1) {
     com_lag <- function(url, sessao) {
-      Sys.sleep(abs(rnorm(1)))
+      Sys.sleep(abs(stats::rnorm(1)))
       try(ler_noticia(sessao, url))
     }
     return(purrr::map_df(url, com_lag, sessao = sessao))
-  } # else {faça o resto}
+  } # else {faz o resto}
 
   pagina <- sessao %>% jump_to(url) %>% read_html()
 
   noticia <- pagina %>% html_node('#content-area')
 
   datahora <- noticia %>% html_node('.date.submitted') %>% html_text() %>%
-    stringr::str_replace('às', '') %>%
     lubridate::dmy_hm(tz = 'America/Sao_Paulo')
 
   titulo <- noticia %>% html_node('.title1') %>% html_text()

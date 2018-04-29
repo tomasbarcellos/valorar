@@ -1,4 +1,4 @@
 library(testthat)
-library(valorar)
+library(valorrr)
 
-test_check("valorar")
+test_check("valorrr")

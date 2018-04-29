@@ -1,4 +1,4 @@
-Package: valorar
+Package: valorrr
 Type: Package
 Title: Ler Noticias do Valor
 Version: 0.2.0
@@ -16,7 +16,12 @@ Suggests:
     knitr,
     rmarkdown,
     testthat,
-    covr
+    covr,
+    dplyr,
+    purrr,
+    tidytext,
+    tm,
+    wordcloud
 VignetteBuilder: knitr
 Imports:
     wdman,
@@ -24,4 +29,5 @@ Imports:
     magrittr,
     stringr,
     tibble,
-    binman
+    binman,
+    lubridate

@@ -1,17 +1,30 @@
+
 #' Pega noticias da sessao
 #'
 #' @param sessao Uma sessao criada por \code{\link{html_session}}
-#' @param css Seletor de css que será passado para \code{\link{html_nodes}}
 #'
 #' @return Uma string com os links da pagina no css
+#' @importFrom rvest html_nodes html_attr
+#' @importFrom magrittr %>% extract
 #' @export
 #'
 #' @examples
-#' links_pagina()
-links_pagina <- function(html, css = '.teaser-title a') {
-  if (missing(html)) html <- html_session('http://www.valor.com.br')
-  html %>% html_nodes(css) %>% html_attr('href') %>%
-    magrittr::extract(. != '') %>%
-    ifelse(test = grepl(pattern = '\\bhttp', x = .),
-           no = paste0('http://www.valor.com.br', .))
+#' html_session("http://www.valor.com.br") %>% links_pagina()
+links_pagina <- function(sessao) {
+  css <- '.teaser-title a'
+  links <- sessao %>% rvest::html_nodes(css) %>%
+    rvest::html_attr('href') %>%
+    eliminar_vazios()
+
+  ifelse(grepl(pattern = '^http', x = links), links,
+         no = paste0('http://www.valor.com.br', links))
+}
+
+#' Title
+#'
+#' @param x vetor de caracteres
+#'
+#' @return o mesmo vetor sem os elementos vazios ("")
+eliminar_vazios <- function(x) {
+  x[x != ""]
 }
