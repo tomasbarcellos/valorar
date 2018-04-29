@@ -18,95 +18,77 @@ devtools::install_github('tomasbarcellos/valorrr')
 
 ## Uso do pacote
 
-```{r, eval = FALSE}
+
+### Lendo noticias
+
+```{r}
 library(valorrr)
-email <- 'meu-email@provedor'
-senha <- 'minha_senha'
-sessao_logada <- login(email, senha)
-# dar uma olhada do objeto da sessao
-sessao_logada
+sessao <- html_session("http://www.valor.com.br")
+links <- sessao %>% links_pagina()
+noticias <- sessao %>% ler_noticia(links[1:10])
 ```
 
-```{r, echo = FALSE, eval = FALSE}
-library(valorrr)
-config <- readLines('../.valor')
-email <- config[1]
-senha <- config[2]
-sessao_logada <- login(email, senha)
-# dar uma olhada do objeto da sessao
-sessao_logada
-```
-
-## Lendo noticias
+A resposta da função `ler_noticia` é uma `tibble` com 6 colunas:
+i) url,
+ii) data e hora em que a notícia foi publicada,
+iii) título da notícia,
+iv) autor da notícia,
+v) notícia em si (texto),
+vi) tags da notícia.
 
 ```{r, eval = FALSE}
-links_noticias <- sessao_logada %>% links_pagina()
-
-noticias <- sessao_logada %>% ler_noticia(links_noticias)
-```
-
-A resposta da função `ler_noticia` é um objeto de classe `noticia`.
-
-```{r, eval = FALSE}
-noticias[[1]]
+noticias
 ```
 
 # Pequeno exemplo de uso
 
-## Pegando dados
-
-```{r, eval = FALSE}
-library(magrittr)
-library(purrr)
-
-resposta <- sessao_logada %>% procurar_valor(termo = 'eleicoes')
-
-links_eleicoes <- attr(resposta, 'links')
-
-noticias_eleicoes <- map(links_eleicoes, safely(ler_noticia),
-                         sessao = sessao_logada) %>% map('result') %>% 
-  extract(!sapply(., is.null)) %>% 
-  map_df(~ .x)
-```
-
 ## Visualizando informações
 
 ```{r, eval = FALSE}
-noticias_eleicoes$tags %>% unlist() %>% table() %>%
-  sort(decreasing = TRUE) %>% magrittr::extract(. > 1)
+library(magrittr)
+noticias2 <- sessao %>% ler_noticia(links[11:20])
+# 10 tags mais usadas no dia
+noticias2$tags %>% 
+  unlist() %>% table() %>%
+  sort(decreasing = TRUE) %>% head(10)
 ```
 
 ```{r, eval = FALSE}
 library(dplyr)
 library(tidytext)
+library(tidyr)
 library(tm)
 
-# Texto é uma lista, precisa ser vetor para tidytext
-noticias_df <- noticias_eleicoes %>% mutate(texto = paste(unlist(texto), collapse = " "))
+tidy_noticias <- noticias2 %>% 
+  select(titulo, texto) %>% 
+  unnest_tokens(termo, texto, "ngrams", n = 2)
 
-tidy_noticias <- noticias_df %>% select(titulo, texto) %>% 
-  unnest_tokens(palavra, texto)
+stop_pt <- tibble(palavra = c(stopwords('pt-br'), "é"))
 
-stop_pt <- tibble(palavra = c(stopwords('pt-br'), 'sobre'))
+noticias_limpo <- tidy_noticias %>% 
+  separate(termo, c("palavra1", "palavra2"), sep = " ") %>% 
+  filter(!palavra1 %in% stop_pt$palavra,
+         !palavra2 %in% stop_pt$palavra) %>% 
+  mutate(termo = paste(palavra1, palavra2)) %>% 
+  select(-palavra1, -palavra2)
 
-noticias_limpo <- tidy_noticias %>% anti_join(stop_pt)
-
-# 10 Palavras mais comuns
+# 10 termos mais comuns
 noticias_limpo %>% 
-  count(palavra, sort = TRUE)
+  count(termo, sort = TRUE)
 
 # Nuvem de palavras
 library(wordcloud)
 minha_nuvem <- function(palavras, freq) {
-  wordcloud(palavras, freq, max.words = 100,
-                      random.color = TRUE, colors = c('orange', 'darkblue', 'lightgray'))
+  cores <- c('orange', 'darkblue', 'lightgray')
+  wordcloud(palavras, freq, max.words = 50,
+            random.color = TRUE, colors = cores)
 }
 ```
 
 
-```{r, fig.height=7, fig.width=10, eval = FALSE}
+```{r, fig.height=7, fig.width=10, warning = FALSE}
 noticias_limpo %>% 
-  count(palavra, sort = TRUE) %>% 
-  with(minha_nuvem(palavra, n))
+  count(termo, sort = TRUE) %>% 
+  with(minha_nuvem(termo, n))
 ```
 
