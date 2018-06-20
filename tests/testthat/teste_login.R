@@ -1,18 +1,16 @@
-# context('login()')
-#
-# test_that('Meta informações da resposta', {
-#   # expect_warning(sessao <- login('', ''), 'Houve falha no login')
-#   expect_warning(sessao <- login('', ''), 'migrar totalmente')
-#   expect_s3_class(sessao, 'session')
-# })
-#
+context('login()')
+pjs <- webdriver::run_phantomjs()
+sessao <- webdriver::Session$new(port = pjs$port)
+
+test_that('Meta informações da resposta', {
+  expect_true(R6::is.R6(sessao))
+})
+
 # Se não está no servidor
-# if (.Platform$OS.type == 'windows' && file.exists('../../.valor')) {
-#   test_that('Faz login corretamente', {
-#     config <- readLines('../../.valor')
-#
-#     expect_message(sessao_logada <- login(config[1], config[2]), 'Login realizado com sucesso')
-#     expect_true(any(grepl('[0-9]{8}', sessao_logada$back)))
-#     expect_true(any(grepl('SESS', sessao_logada$response$cookies$name)))
-#   })
-# }
+if (file.exists('../../.valor')) {
+  test_that('Faz login corretamente', {
+    config <- readLines('../../.valor')
+
+    expect_silent(sessao_logada <- login(sessao, config[1], config[2]))
+  })
+}

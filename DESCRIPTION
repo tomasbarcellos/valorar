@@ -24,10 +24,10 @@ Suggests:
     wordcloud
 VignetteBuilder: knitr
 Imports:
-    wdman,
     xml2,
     magrittr,
     stringr,
     tibble,
-    binman,
-    lubridate
+    lubridate,
+    webdriver,
+    rstudioapi
