@@ -4,9 +4,11 @@
 \alias{login}
 \title{Realizar Login no site do Valor Economico}
 \usage{
-login(email = NULL, senha = NULL)
+login(sessao, email = NULL, senha = NULL)
 }
 \arguments{
+\item{sessao}{uma sessao criada por \link{\code{webdriver::Session}}}
+
 \item{email}{e-mail da conta realizar login no site do valor}
 
 \item{senha}{senha para realizar login no site do valor}
@@ -19,6 +21,8 @@ Realizar Login no site do Valor Economico
 }
 \examples{
 \dontrun{
-login('fulano@provedor.org', 'senha')
+pjs <- webdriver::run_phantomjs()
+sessao <- webdriver::Session$new(port = pjs$port)
+login(sessao, 'fulano@provedor.org', 'senha')
 }
 }
