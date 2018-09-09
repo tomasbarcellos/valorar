@@ -21,7 +21,7 @@
 #' }
 login <- function(sessao, email = NULL, senha = NULL) {
   if (methods::is(sessao) != "Session") {
-    stop("`sessao` deve ser um objeto gerado com ``webdriver::Session$new()", call. = FALSE)
+    stop("`sessao` deve ser um objeto gerado com 'webdriver::Session$new()'", call. = FALSE)
   }
 
   url <- "https://login.globo.com/login/6668?url=&tam=WIDGET"

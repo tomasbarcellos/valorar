@@ -1,4 +1,3 @@
-
 #' Pega noticias da sessao
 #'
 #' @param sessao Uma sessao criada por \code{\link{html_session}}
