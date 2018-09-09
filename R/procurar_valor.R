@@ -1,64 +1,54 @@
-#' #' Procurar noticias no site do jornal Valor Economico
-#' #'
-#' #' @importFrom utils getFromNamespace
-#' #' @importFrom stringr str_extract
-#' #' @importFrom magrittr extract2
-#' #'
-#' #' @param termo Termo buscado
-#' #' @param sessao Sessao
-#' #' @param paginas numero de paginas que serao retornadas
-#' #'
-#' #' @return Uma sessao com resultados da busca
-#' #' @export
-#' #'
-#' #' @examples
-#' #' \dontrun{
-#' #' procurar_valor('desemprego')
-#' #' }
-#' #'
-#' procurar_valor <- function(termo, #sessao = rvest::html_session('http://www.valor.com.br'),
-#'                            paginas = 5) {
-#'   requireNamespace('wdman', quietly = TRUE)
-#'   requireNamespace('binman', quietly = TRUE)
+#' Procurar noticias no site do jornal Valor Economico
 #'
-#'   renderizar_ler <- function(url) {
-#'     tf <- tempfile(fileext = '.html')
-#'     JS <- system.file('js','phantom.js', package = 'valorar')
+#' @importFrom stringr str_extract
+#' @importFrom magrittr extract2
 #'
-#'     system(paste(phantomJS()$path, JS, url, tf), intern = TRUE)
+#' @param sessao Sessao
+#' @param termo Termo buscado
+#' @param paginas numero de paginas que serao retornadas
 #'
-#'     read_html(tf)
-#'   }
+#' @return Um vetor com os links das noticias encontradas
+#' @export
 #'
-#'   url <- paste0('http://www.valor.com.br/busca/', termo)
-#'   html <- renderizar_ler(url)
-#'   links <- html %>% html_nodes('.title2 a') %>% html_attr('href')
-#'   resultados <- html %>% html_nodes('.search-result-term') %>% html_text() %>%
-#'     magrittr::extract2(1) %>%
-#'     gsub(pattern = '\t', replacement = '') %>%
-#'     stringr::str_extract('de [0-9]+') %>%
-#'     gsub(pattern = 'de *', replacement = '') %>%
-#'     as.numeric()
-#'
-#'   # if (paginas != 1) {
-#'   #   paginacao <- paste0(url, '?page=', seq_len(resultados/10), '&method=ajax')
-#'   #   links2 <- purrr::map_chr(paginacao[seq_len(paginas)][-1],
-#'   #                            ~ renderizar_ler(.x) %>% links_pagina('.title2 a'))
-#'   #   links <- c(links, links2)
-#'   # }
-#'
-#'   # attr(sessao, 'pagina') <- 1
-#'   # attr(sessao, 'resultados') <- resultados
-#'   # attr(sessao, 'links') <- links
-#'   # sessao
-#'
-#'   links
+#' @examples
+#' \dontrun{
+#' procurar_valor('desemprego')
 #' }
 #'
-#'
-#'
-#'
-#'
-#'
-#'
-#'
+procurar_valor <- function(sessao, termo, paginas = 5) {
+  if (methods::is(sessao) != "Session") {
+    stop("`sessao` deve ser um objeto gerado com 'webdriver::Session$new()'",
+         call. = FALSE)
+  }
+
+  url <- paste0('http://www.valor.com.br/busca/', termo)
+
+  pegar_links <- function(url) {
+    sessao$go(url)
+    html <- sessao$getSource() %>% read_html()
+    html %>% html_nodes('.title2 a') %>% html_attr('href')
+  }
+
+  # links <- pegar_links(url)
+  sessao$go(url)
+  html <- sessao$getSource() %>% read_html()
+
+  resultados <- html %>% html_nodes('.search-result-term') %>% html_text() %>%
+    magrittr::extract2(1) %>%
+    gsub(pattern = '\t', replacement = '') %>%
+    stringr::str_extract('de [0-9]+') %>%
+    gsub(pattern = 'de *', replacement = '') %>%
+    as.numeric()
+
+  links <- html %>% html_nodes('.title2 a') %>% html_attr('href')
+
+  if (paginas != 1 & resultados > 10) {
+    paginacao <- paste0(url, '?page=', seq_len( (resultados/10) + 1))
+    links2 <- purrr::map(paginacao[seq_len(paginas)[-1]], pegar_links) %>%
+      unlist()
+    links <- c(links, links2)
+  }
+
+  links
+}
+
