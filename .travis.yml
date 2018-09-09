@@ -11,6 +11,9 @@ r_packages:
   - rvest
   - selectr
   - tibble
+  - tm
+  - tidytext
+  - wordcloud
 
 r_build_args: '--no-build-vignettes'
 r_check_args: '--ignore-vignettes'

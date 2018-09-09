@@ -30,4 +30,5 @@ Imports:
     tibble,
     lubridate,
     webdriver,
-    rstudioapi
+    rstudioapi,
+    methods
