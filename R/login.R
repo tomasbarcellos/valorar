@@ -1,6 +1,6 @@
 #' Realizar Login no site do Valor Economico
 #'
-#' @param sessao uma sessao criada por {\code{webdriver::Session}
+#' @param sessao uma sessao criada por \code{webdriver::Session}
 #' @param email e-mail da conta realizar login no site do valor
 #' @param senha senha para realizar login no site do valor
 #'
